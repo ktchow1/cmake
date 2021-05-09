@@ -23,6 +23,7 @@ project(my_cmake_project)
 #
 # 3. Some pre-defined variables for CMake : 
 #    CMAKE_CURRENT_SOURCE_DIR = path of current CMakeLists.txt
+#    CMAKE_CURRENT_BINARY_DIR = path of current directory running >> cmake ../..
 #    CMAKE_BUILD_TYPE 
 #    CMAKE_C_FLAGS_DEBUG      = suggested to initialize it with custom-defined FLAGS_DEBUG
 #    CMAKE_C_FLAGS_RELEASE    = suggested to initialize it with custom-defined FLAGS_RELEASE
@@ -38,11 +39,6 @@ project(my_cmake_project)
 ####################################################################
 
 
-add_compile_options(-MMD -MD 
-                    -Wall -Wextra -Wpedantic -Werror 
-                    -fno-builtin-memcmp 
-                    -pthread $<$<COMPILE_LANGUAGE:CXX>:-fconcepts-diagnostics-depth=2>)
-
 ##################
 ### Set option ###
 ##################
@@ -56,9 +52,32 @@ message(">> MY_OPTION2 = ${MY_OPTION2}")
 message(">> MY_OPTION3 = ${MY_OPTION3}")
 
 
+####################
+### Set variable ###
+####################
+list(APPEND MY_LIST "value0_${MY_OPTION0}")
+list(APPEND MY_LIST "value1_${MY_OPTION1}")
+list(APPEND MY_LIST "value2_${MY_OPTION2}")
+list(APPEND MY_LIST "value3_${MY_OPTION3}")
+message(">> MY_LIST = ${MY_LIST}")
+list(REMOVE_ITEM MY_LIST "value3_${MY_OPTION3}") # remove item by exact match
+message(">> MY_LIST = ${MY_LIST}")
+
+set(MY_STR "my_str=123")
+list(REMOVE_ITEM MY_STR "123")
+message(">> MY_STR = ${MY_STR}")
+list(REMOVE_ITEM MY_STR "my_str=123")
+message(">> MY_STR = ${MY_STR}")
+
+
 ################
 ### Set flag ###
 ################
+add_compile_options(-MMD -MD 
+                    -Wall -Wextra -Wpedantic -Werror 
+                    -fno-builtin-memcmp 
+                    -pthread $<$<COMPILE_LANGUAGE:CXX>:-fconcepts-diagnostics-depth=2>)
+
 set(FLAGS_DEBUG "-flag0 -flag1 -flag2")
 set(FLAGS_RELEASE "-flag2 -flag3 -xxx")
 
@@ -82,16 +101,15 @@ message(">> CMAKE_C_FLAGS = ${CMAKE_C_FLAGS}")
 message(">> CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
 
 
-####################
-### Set variable ###
-####################
-list(APPEND MY_LIST "value0_${MY_OPTION0}")
-list(APPEND MY_LIST "value1_${MY_OPTION1}")
-list(APPEND MY_LIST "value2_${MY_OPTION2}")
-list(APPEND MY_LIST "value3_${MY_OPTION3}")
-message(">> MY_LIST = ${MY_LIST}")
-list(REMOVE_ITEM MY_LIST "value3_${MY_OPTION3}") # remove item by exact match
-message(">> MY_LIST = ${MY_LIST}")
+################
+### Set path ###
+################
+message(">> CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}")
+message(">> CMAKE_CURRENT_BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}")
+get_filename_component(OUTPUT0 ${CMAKE_CURRENT_SOURCE_DIR} NAME) # i.e. get last part of the path
+get_filename_component(OUTPUT1 ${CMAKE_CURRENT_BINARY_DIR} NAME) # i.e. get last part of the path
+message(">> CMAKE_CURRENT_SOURCE_DIR NAME = ${OUTPUT0}")
+message(">> CMAKE_CURRENT_BINARY_DIR NAME = ${OUTPUT1}")
 
 
 ########################
