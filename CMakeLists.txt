@@ -35,8 +35,8 @@ project(my_cmake_project)
 # 4. MY_VARIABLE is usually list<string> storing the options for gcc/g++.
 #    MY_VARIABLE is usually list<string> determined by the CMake options.
 #    Effectively, we pass the CMake options to gcc options.
-#     
 ####################################################################
+message("Type cmake ../.. -DMY_OPTION0=on -DMY_OPTION1=off")
 
 
 ##################
